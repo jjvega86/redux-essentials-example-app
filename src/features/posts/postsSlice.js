@@ -14,7 +14,7 @@ const postsSlice = createSlice({
     },
     postUpdated(state, action) {
       const { id, title, content } = action.payload;
-      const postToUpdate = state.posts.find((post) => post.id === id);
+      const postToUpdate = state.find((post) => post.id === id);
       if (postToUpdate) {
         postToUpdate.title = title;
         postToUpdate.content = content;
