@@ -23,10 +23,10 @@ const postsSlice = createSlice({
   initialState,
   reducers: {
     postAdded: {
-      reducer(state, action) {
+      reducer: (state, action) => {
         state.push(action.payload);
       },
-      prepare(title, content, userId) {
+      prepare: (title, content, userId) => {
         return {
           payload: {
             id: nanoid(),
@@ -39,7 +39,7 @@ const postsSlice = createSlice({
         };
       },
     },
-    postUpdated(state, action) {
+    postUpdated: (state, action) => {
       const { id, title, content } = action.payload;
       const postToUpdate = state.find((post) => post.id === id);
       if (postToUpdate) {
@@ -47,7 +47,7 @@ const postsSlice = createSlice({
         postToUpdate.content = content;
       }
     },
-    reactionAdded(state, action) {
+    reactionAdded: (state, action) => {
       const { postId, reaction } = action.payload;
       const existingPost = state.find((post) => post.id === postId);
       if (existingPost) {
