@@ -4,6 +4,7 @@ import { allPosts } from "./postsSlice";
 import { Link } from "react-router-dom";
 import { PostAuthor } from "./PostAuthor";
 import { TimeAgo } from "./TimeAgo";
+import { ReactionButtons } from "./ReactionButtons";
 
 export const PostsList = () => {
   const posts = useSelector(allPosts);
@@ -20,9 +21,12 @@ export const PostsList = () => {
         </div>
 
         <p className="post-content">{post.content}</p>
-        <Link to={`/posts/${post.id}`} className="button muted-button">
-          View Post
-        </Link>
+        <div>
+          <Link to={`/posts/${post.id}`} className="button muted-button">
+            View Post
+          </Link>
+          <ReactionButtons post={post} />
+        </div>
       </article>
     );
   });
