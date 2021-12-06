@@ -34,8 +34,12 @@ export const AddPostForm = () => {
   });
 
   return (
-    <section>
-      <button type="button" onClick={() => setIsVisible(!isVisible)}>
+    <section style={{ marginTop: "2vh" }}>
+      <button
+        type="button"
+        style={{ width: "200px" }}
+        onClick={() => setIsVisible(!isVisible)}
+      >
         Toggle Form
       </button>
       {isVisible && (
