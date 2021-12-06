@@ -7,12 +7,14 @@ const initialState = [
     title: "First post",
     content: "Hello!",
     date: sub(new Date(), { minutes: 10 }).toISOString(),
+    reactions: { thumbsUp: 0, hooray: 0, heart: 0, rocket: 0, eyes: 0 },
   },
   {
     id: "2",
     title: "Second post",
     content: "More text!",
     date: sub(new Date(), { minutes: 5 }).toISOString(),
+    reactions: { thumbsUp: 0, hooray: 0, heart: 0, rocket: 0, eyes: 0 },
   },
 ];
 
@@ -29,6 +31,7 @@ const postsSlice = createSlice({
           payload: {
             id: nanoid(),
             date: new Date().toISOString(),
+            reactions: { thumbsUp: 0, hooray: 0, heart: 0, rocket: 0, eyes: 0 },
             title,
             content,
             user: userId,
