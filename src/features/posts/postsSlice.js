@@ -51,6 +51,19 @@ const postsSlice = createSlice({
       }
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchPosts.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(fetchPosts.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.posts = [...state.posts, action.payload];
+      })
+      .addCase(fetchPosts.rejected, (state, action) => {
+        (state.status = "failed"), (state.error = action.error.message);
+      });
+  },
 });
 
 //! Could change state.posts.posts to state.posts.items (in initialState) to avoid repetitive naming
