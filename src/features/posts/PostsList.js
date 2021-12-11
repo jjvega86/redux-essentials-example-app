@@ -1,13 +1,13 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { allPosts } from "./postsSlice";
+import { selectAllPosts } from "./postsSlice";
 import { Link } from "react-router-dom";
 import { PostAuthor } from "./PostAuthor";
 import { TimeAgo } from "./TimeAgo";
 import { ReactionButtons } from "./ReactionButtons";
 
 export const PostsList = () => {
-  const posts = useSelector(allPosts);
+  const posts = useSelector(selectAllPosts);
   const orderedPosts = posts
     .slice()
     .sort((a, b) => b.date.localeCompare(a.date));
