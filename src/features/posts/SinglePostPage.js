@@ -1,38 +1,16 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { PostAuthor } from "./PostAuthor";
-import { TimeAgo } from "./TimeAgo";
-import { ReactionButtons } from "./ReactionButtons";
 import { selectPostById } from "./postsSlice";
+import { PostExcerpt } from "./PostExcerpt";
 
 export const SinglePostPage = ({ match }) => {
   const { postId } = match.params;
 
-  const post = useSelector(
-    selectPostById((state) => selectPostById(state, postId))
-  );
+  const post = useSelector((state) => selectPostById(state, postId));
 
   if (!post) {
     return <h2>No Post with that Id Found!</h2>;
   }
 
-  return (
-    <section>
-      <article className="post">
-        <h2>{post.title}</h2>
-        <div>
-          <PostAuthor userId={post.user} />
-          <TimeAgo timestamp={post.date} />
-        </div>
-        <p className="post-content">{post.content}</p>
-        <div>
-          <Link to={`/editPost/${post.id}`} className="button muted-button">
-            Edit Post
-          </Link>
-          <ReactionButtons post={post} />
-        </div>
-      </article>
-    </section>
-  );
+  return <PostExcerpt post={post} />;
 };

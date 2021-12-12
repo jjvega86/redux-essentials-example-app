@@ -3,7 +3,7 @@ import { TimeAgo } from "./TimeAgo";
 import { Link } from "react-router-dom";
 import { ReactionButtons } from "./ReactionButtons";
 
-const PostExcerpt = ({ post }) => {
+export const PostExcerpt = ({ post }) => {
   return (
     <article className="post-excerpt" key={post.id}>
       <h3>{post.title}</h3>
@@ -22,5 +22,3 @@ const PostExcerpt = ({ post }) => {
     </article>
   );
 };
-
-export default PostExcerpt;
