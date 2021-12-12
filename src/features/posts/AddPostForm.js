@@ -18,6 +18,7 @@ export const AddPostForm = () => {
 
   const canSave =
     [title, content, userId].every(Boolean) && addRequestStatus === "idle";
+
   const onSavePostClicked = async (e) => {
     e.preventDefault();
     if (canSave) {
