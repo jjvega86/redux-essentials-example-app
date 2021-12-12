@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { selectAllPosts, fetchPosts } from "./postsSlice";
+import { fetchPosts, selectPostIds } from "./postsSlice";
 
 import { Spinner } from "../../components/Spinner";
 import { PostExcerpt } from "./PostExcerpt";
@@ -10,15 +10,12 @@ import { PostExcerpt } from "./PostExcerpt";
 //let MemoizedPostExcerpt = React.memo(PostExcerpt);
 // return <MemoizedPostExcerpt key={post.id} post={post} />
 
-const contentCreator = (status, posts, error) => {
+const contentCreator = (status, orderedPostIds, error) => {
   if (status === "loading") {
     return <Spinner />;
   } else if (status === "succeeded") {
-    const orderedPosts = posts
-      .slice()
-      .sort((a, b) => b.date.localeCompare(a.date));
-    return orderedPosts.map((post) => {
-      return <PostExcerpt key={post.id} post={post} />;
+    return orderedPostIds.map((postId) => {
+      return <PostExcerpt key={postId} postId={postId} />;
     });
   } else if (status === "error") {
     return <div>{error}</div>;
@@ -27,7 +24,7 @@ const contentCreator = (status, posts, error) => {
 
 export const PostsList = () => {
   const dispatch = useDispatch();
-  const posts = useSelector(selectAllPosts);
+  const orderedPostIds = useSelector(selectPostIds);
   const postStatus = useSelector((state) => state.posts.status);
   const error = useSelector((state) => state.posts.error);
 
@@ -37,7 +34,7 @@ export const PostsList = () => {
     }
   }, [postStatus, dispatch]);
 
-  let content = contentCreator(postStatus, posts, error);
+  let content = contentCreator(postStatus, orderedPostIds, error);
 
   return (
     <section className="posts-list">
