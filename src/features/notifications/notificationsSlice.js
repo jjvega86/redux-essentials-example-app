@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { client } from "../../api/client";
 
 export const fetchNotifications = createAsyncThunk(
-  "notifications/fetchNotifications",
+  `notifications/fetchNotifications`,
   async (_, { getState }) => {
     const allNotifications = selectAllNotifications(getState());
     const [latestNotification] = allNotifications;
@@ -18,10 +18,19 @@ export const fetchNotifications = createAsyncThunk(
 const notificationsSlice = createSlice({
   name: "notifications",
   initialState: [],
-  reducers: {},
+  reducers: {
+    allNotificationsRead: (state, action) => {
+      state.forEach((notification) => {
+        notification.read = true;
+      });
+    },
+  },
   extraReducers: {
     [fetchNotifications.fulfilled]: (state, action) => {
       state.push(...action.payload);
+      state.forEach((notification) => {
+        notification.isNew = !notification.read;
+      });
       state.sort((a, b) => b.date.localeCompare(a.date));
     },
   },
