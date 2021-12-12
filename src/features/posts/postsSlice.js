@@ -2,16 +2,30 @@ import {
   createSlice,
   createAsyncThunk,
   createSelector,
+  createEntityAdapter,
 } from "@reduxjs/toolkit";
 import { client } from "../../api/client";
 
 // This is the "state" for this slice. If initialState is an array, it should be treated
 // as an array when using the "state" variable in reducers.
-const initialState = {
+/* const initialState = {
   posts: [],
   status: "idle",
   error: null,
-};
+}; */
+
+// Utilizing createEntityAdapter to allow for Redux to normalize data underneath the hood
+// This will allow accessing posts using object key lookup instead of iterating over all posts
+// And maintaining a seperate array of postIds to track updating and adding posts
+// To prevent unnecessary re-renders when interacting with UI
+const postsAdaptor = createEntityAdapter({
+  sortComparer: (a, b) => b.date.localeCompare(a.date),
+});
+
+const initialState = postsAdaptor.getInitialState({
+  status: "idle",
+  error: null,
+});
 
 export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
   const response = await client.get("/fakeApi/posts");
@@ -32,15 +46,15 @@ const postsSlice = createSlice({
   reducers: {
     postUpdated: (state, action) => {
       const { id, title, content } = action.payload;
-      const postToUpdate = state.posts.find((post) => post.id === id);
-      if (postToUpdate) {
-        postToUpdate.title = title;
-        postToUpdate.content = content;
+      const existingPost = state.entities[id];
+      if (existingPost) {
+        existingPost.title = title;
+        existingPost.content = content;
       }
     },
     reactionAdded: (state, action) => {
       const { postId, reaction } = action.payload;
-      const existingPost = state.posts.find((post) => post.id === postId);
+      const existingPost = state.entities[postId];
       if (existingPost) {
         existingPost.reactions[reaction]++;
       }
@@ -53,15 +67,13 @@ const postsSlice = createSlice({
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.posts = state.posts.concat(action.payload);
+        postsAdaptor.upsertMany(state, action.payload);
       })
       .addCase(fetchPosts.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })
-      .addCase(addNewPost.fulfilled, (state, action) => {
-        state.posts.push(action.payload);
-      });
+      .addCase(addNewPost.fulfilled, postsAdaptor.addOne);
   },
 });
 

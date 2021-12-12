@@ -5,6 +5,11 @@ import { selectAllPosts, fetchPosts } from "./postsSlice";
 import { Spinner } from "../../components/Spinner";
 import { PostExcerpt } from "./PostExcerpt";
 
+// When one PostExcerpt is updated, all of them will re-render (because the parent component re-renders with a new array reference)
+// Memoizing the component is one way to prevent this behavior and only re-render the component that is updating (the individual PostExcerpt component)
+//let MemoizedPostExcerpt = React.memo(PostExcerpt);
+// return <MemoizedPostExcerpt key={post.id} post={post} />
+
 const contentCreator = (status, posts, error) => {
   if (status === "loading") {
     return <Spinner />;
