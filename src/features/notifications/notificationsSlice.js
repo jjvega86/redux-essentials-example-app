@@ -14,3 +14,19 @@ export const fetchNotifications = createAsyncThunk(
     return response.data;
   }
 );
+
+const notificationsSlice = createSlice({
+  name: "notifications",
+  initialState: [],
+  reducers: {},
+  extraReducers: {
+    [fetchNotifications.fulfilled]: (state, action) => {
+      state.push(...action.payload);
+      state.sort((a, b) => b.date.localeCompare(a.date));
+    },
+  },
+});
+
+export default notificationsSlice.reducer;
+
+export const selectAllNotifications = (state) => state.notifications;
