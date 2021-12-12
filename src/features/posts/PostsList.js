@@ -5,6 +5,21 @@ import { selectAllPosts, fetchPosts } from "./postsSlice";
 import { Spinner } from "../../components/Spinner";
 import { PostExcerpt } from "./PostExcerpt";
 
+const contentCreator = (status, posts, error) => {
+  if (status === "loading") {
+    return <Spinner />;
+  } else if (status === "succeeded") {
+    const orderedPosts = posts
+      .slice()
+      .sort((a, b) => b.date.localeCompare(a.date));
+    return orderedPosts.map((post) => {
+      return <PostExcerpt key={post.id} post={post} />;
+    });
+  } else if (status === "error") {
+    return <div>{error}</div>;
+  }
+};
+
 export const PostsList = () => {
   const dispatch = useDispatch();
   const posts = useSelector(selectAllPosts);
@@ -17,19 +32,7 @@ export const PostsList = () => {
     }
   }, [postStatus, dispatch]);
 
-  let content;
-  if (postStatus === "loading") {
-    content = <Spinner />;
-  } else if (postStatus === "succeeded") {
-    const orderedPosts = posts
-      .slice()
-      .sort((a, b) => b.date.localeCompare(a.date));
-    content = orderedPosts.map((post) => {
-      return <PostExcerpt key={post.id} post={post} />;
-    });
-  } else if (postStatus === "error") {
-    content = <div>{error}</div>;
-  }
+  let content = contentCreator(postStatus, posts, error);
 
   return (
     <section className="posts-list">
