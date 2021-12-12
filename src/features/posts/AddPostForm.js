@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { postAdded } from "./postsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { addNewPost } from "./postsSlice";
 

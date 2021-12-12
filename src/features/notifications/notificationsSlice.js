@@ -36,6 +36,7 @@ const notificationsSlice = createSlice({
   },
 });
 
-export default notificationsSlice.reducer;
-
+export const { allNotificationsRead } = notificationsSlice.actions;
 export const selectAllNotifications = (state) => state.notifications;
+
+export default notificationsSlice.reducer;
