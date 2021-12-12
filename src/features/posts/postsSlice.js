@@ -18,11 +18,11 @@ import { client } from "../../api/client";
 // This will allow accessing posts using object key lookup instead of iterating over all posts
 // And maintaining a seperate array of postIds to track updating and adding posts
 // To prevent unnecessary re-renders when interacting with UI
-const postsAdaptor = createEntityAdapter({
+const postsAdapter = createEntityAdapter({
   sortComparer: (a, b) => b.date.localeCompare(a.date),
 });
 
-const initialState = postsAdaptor.getInitialState({
+const initialState = postsAdapter.getInitialState({
   status: "idle",
   error: null,
 });
@@ -67,13 +67,13 @@ const postsSlice = createSlice({
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
         state.status = "succeeded";
-        postsAdaptor.upsertMany(state, action.payload);
+        postsAdapter.upsertMany(state, action.payload);
       })
       .addCase(fetchPosts.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })
-      .addCase(addNewPost.fulfilled, postsAdaptor.addOne);
+      .addCase(addNewPost.fulfilled, postsAdapter.addOne);
   },
 });
 
@@ -95,7 +95,7 @@ export const {
   selectAll: selectAllPosts,
   selectById: selectPostById,
   selectIds: selectPostIds,
-} = postsAdaptor.getSelectors((state) => state.posts);
+} = postsAdapter.getSelectors((state) => state.posts);
 
 export const selectPostsByUser = createSelector(
   [selectAllPosts, (state, userId) => userId],
