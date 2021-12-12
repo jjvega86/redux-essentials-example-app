@@ -7,9 +7,11 @@ export const UsersList = () => {
   const users = useSelector(selectAllUsers);
 
   const renderedUsers = users.map((user) => {
-    <li key={user.id}>
-      <Link to={`/users/${user.id}`}>{user.name}</Link>
-    </li>;
+    return (
+      <li key={user.id}>
+        <Link to={`/users/${user.id}`}>{user.name}</Link>
+      </li>
+    );
   });
 
   return (

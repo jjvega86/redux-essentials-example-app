@@ -7,7 +7,7 @@ import { selectAllPosts } from "../posts/postsSlice";
 
 export const UserPage = ({ match }) => {
   const { userId } = match.params;
-  const user = useSelector(selectUserById(state, userId));
+  const user = useSelector((state) => selectUserById(state, userId));
 
   const postsForUser = useSelector((state) => {
     const allPosts = selectAllPosts(state);
@@ -15,9 +15,11 @@ export const UserPage = ({ match }) => {
   });
 
   const postTitles = postsForUser.map((post) => {
-    <li key={post.id}>
-      <Link to={`/posts/${post.id}`}>{post.title}</Link>
-    </li>;
+    return (
+      <li key={post.id}>
+        <Link to={`/posts/${post.id}`}>{post.title}</Link>
+      </li>
+    );
   });
 
   return (
