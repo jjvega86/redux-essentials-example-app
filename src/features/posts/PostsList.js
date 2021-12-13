@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useGetPostsQuery } from "../api/apiSlice";
 
 import { Spinner } from "../../components/Spinner";
@@ -11,18 +11,25 @@ import { PostExcerpt } from "./PostExcerpt";
 
 export const PostsList = () => {
   const {
-    data: posts,
+    data: posts = [],
     isLoading,
     isSuccess,
     isError,
     error,
   } = useGetPostsQuery();
 
+  //useMemo will prevent posts from being sorted on each render, only when the value of posts changes
+  const sortedPosts = useMemo(() => {
+    const properlyArrangedPosts = posts.slice();
+    properlyArrangedPosts.sort((a, b) => b.date.localeCompare(a.date));
+    return properlyArrangedPosts;
+  }, [posts]);
+
   let content;
   if (isLoading) {
     content = <Spinner />;
   } else if (isSuccess) {
-    content = posts.map((post) => {
+    content = sortedPosts.map((post) => {
       return <PostExcerpt post={post} />;
     });
   } else if (isError) {
