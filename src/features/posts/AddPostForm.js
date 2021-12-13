@@ -1,37 +1,33 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useAddNewPostMutation } from "../api/apiSlice";
 import { selectAllUsers } from "../users/usersSlice";
-import { addNewPost } from "./postsSlice";
 
 export const AddPostForm = () => {
   const [title, setTitleInput] = useState("");
   const [content, setContentInput] = useState("");
   const [userId, setUserId] = useState("");
   const [isVisible, setIsVisible] = useState(false);
-  const [addRequestStatus, setAddRequestStatus] = useState("idle");
-  const dispatch = useDispatch();
+
+  const [addNewPost, { isLoading }] = useAddNewPostMutation();
   const users = useSelector(selectAllUsers);
 
   const onTitleChange = (e) => setTitleInput(e.target.value);
   const onContentChange = (e) => setContentInput(e.target.value);
   const onAuthorChange = (e) => setUserId(e.target.value);
 
-  const canSave =
-    [title, content, userId].every(Boolean) && addRequestStatus === "idle";
+  const canSave = [title, content, userId].every(Boolean) && !isLoading;
 
   const onSavePostClicked = async (e) => {
     e.preventDefault();
     if (canSave) {
       try {
-        setAddRequestStatus("pending");
-        await dispatch(addNewPost({ title, content, user: userId })).unwrap();
+        await addNewPost({ title, content, user: userId }).unwrap();
         setTitleInput("");
         setContentInput("");
         setUserId("");
       } catch (error) {
         console.error("Failed to save the post: ", error);
-      } finally {
-        setAddRequestStatus("idle");
       }
     }
   };

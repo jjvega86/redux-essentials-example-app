@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
+import classNames from "classnames";
 import { useGetPostsQuery } from "../api/apiSlice";
-
 import { Spinner } from "../../components/Spinner";
 import { PostExcerpt } from "./PostExcerpt";
 
@@ -13,9 +13,11 @@ export const PostsList = () => {
   const {
     data: posts = [],
     isLoading,
+    isFetching,
     isSuccess,
     isError,
     error,
+    refetch,
   } = useGetPostsQuery();
 
   //useMemo will prevent posts from being sorted on each render, only when the value of posts changes
@@ -29,9 +31,15 @@ export const PostsList = () => {
   if (isLoading) {
     content = <Spinner />;
   } else if (isSuccess) {
-    content = sortedPosts.map((post) => {
-      return <PostExcerpt post={post} />;
+    const renderedPosts = sortedPosts.map((post) => {
+      return <PostExcerpt key={post.id} post={post} />;
     });
+
+    const containerClassName = classNames("posts-container", {
+      disabled: isFetching,
+    });
+
+    content = <div className={containerClassName}>{renderedPosts}</div>;
   } else if (isError) {
     content = <div>{error}</div>;
   }
@@ -39,6 +47,7 @@ export const PostsList = () => {
   return (
     <section className="posts-list">
       <h2>Posts</h2>
+      <button onClick={refetch}>Refetch Posts</button>
       {content}
     </section>
   );
