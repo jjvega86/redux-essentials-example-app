@@ -37,7 +37,7 @@ export const Navbar = () => {
             <Link to="/notifications">Notifications {notificationsBadge}</Link>
           </div>
           <button className="button" onClick={fetchNewNotifications}>
-            Refresh Notifications
+            Refresh Notifications!
           </button>
         </div>
       </section>
