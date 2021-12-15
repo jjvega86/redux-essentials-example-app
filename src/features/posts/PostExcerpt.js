@@ -14,9 +14,14 @@ export const PostExcerpt = ({ post }) => {
 
       <p className="post-content">{post.content}</p>
       <div>
-        <Link to={`/editPost/${post.id}`} className="button muted-button">
-          Edit Post
-        </Link>
+        <span>
+          <Link to={`/posts/${post.id}`} className="button muted-button">
+            View Post
+          </Link>
+          <Link to={`/editPost/${post.id}`} className="button muted-button">
+            Edit Post
+          </Link>
+        </span>
         <ReactionButtons post={post} />
       </div>
     </article>
