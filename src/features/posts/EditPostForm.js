@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router";
 import { useGetPostQuery, useEditPostMutation } from "../api/apiSlice";
 
@@ -8,8 +8,15 @@ export const EditPostForm = ({ match }) => {
   const { data: post } = useGetPostQuery(postId);
   const [updatePost, { isLoading }] = useEditPostMutation();
 
-  const [title, setTitle] = useState(post.title);
-  const [content, setContent] = useState(post.content);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+
+  useEffect(() => {
+    if (post) {
+      setTitle(post.title);
+      setContent(post.content);
+    }
+  }, [post]);
 
   const onTitleChange = (e) => {
     setTitle(e.target.value);
