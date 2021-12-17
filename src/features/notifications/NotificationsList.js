@@ -5,13 +5,15 @@ import classNames from "classnames";
 
 import { selectAllUsers } from "../users/usersSlice";
 import {
-  selectAllNotifications,
+  useGetNotificationsQuery,
   allNotificationsRead,
+  selectMetadataEntities,
 } from "./notificationsSlice";
 
 export const NotificationsList = () => {
   const dispatch = useDispatch();
-  const notifications = useSelector(selectAllNotifications);
+  const { data: notifications = [] } = useGetNotificationsQuery();
+  const notificationsMetadata = useSelector(selectMetadataEntities);
   const users = useSelector(selectAllUsers);
 
   useLayoutEffect(() => {
@@ -25,11 +27,13 @@ export const NotificationsList = () => {
       name: "Unknown User",
     };
 
+    const metadata = notificationsMetadata[notification.id];
+
     // classNames is a utility library used to more easily concatenate classnames for conditional rendering
     // Here, we are checking each notification's isNew property for true or false
     // If true, .new is added to the class name
     const notificationClassName = classNames("notification", {
-      new: notification.isNew,
+      new: metadata.isNew,
     });
 
     return (

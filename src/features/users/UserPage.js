@@ -16,7 +16,7 @@ export const UserPage = ({ match }) => {
       (result, userId) => userId,
       (data, userId) => data.filter((post) => post.user === userId)
     );
-  });
+  }, []);
 
   const { postsForUser } = useGetPostsQuery(undefined, {
     selectFromResult: (result) => ({
